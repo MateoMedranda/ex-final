@@ -10,9 +10,9 @@ class PalindromoProvider extends ChangeNotifier {
   void verificarPalindromo(String palabra) {
     bool es = _controller.esPalindromo(palabra);
     if (es) {
-      _resultado = "Es palíndromo";
+      _resultado = "Es palíndromo :D";
     } else {
-      _resultado = "No es palíndromo";
+      _resultado = "No es palíndromo :O";
     }
     notifyListeners();
   }

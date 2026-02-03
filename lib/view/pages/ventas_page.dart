@@ -1,61 +1,57 @@
 import 'package:flutter/material.dart';
-import '../controller/ventas_controller.dart';
+import 'package:provider/provider.dart';
+import '../provider/ventas_provider.dart';
+import 'result_page.dart';
 
-class HomeView extends StatefulWidget {
-  const HomeView({super.key});
+class VentasPage extends StatefulWidget {
+  const VentasPage({super.key});
 
   @override
-  State<HomeView> createState() => _HomeViewState();
+  State<VentasPage> createState() => _VentasPageState();
 }
 
-class _HomeViewState extends State<HomeView> {
-
+class _VentasPageState extends State<VentasPage> {
   final TextEditingController _valorController = TextEditingController();
   final TextEditingController _categoriaController = TextEditingController();
 
-  final List<Map<String, dynamic>> ventas = [];
-  final VentasController controller = VentasController();
-
-  void agregarVenta() {
+  void agregarVenta(BuildContext context) {
     if (_valorController.text.isNotEmpty &&
         _categoriaController.text.isNotEmpty) {
+      
+      final valor = double.tryParse(_valorController.text);
+      if (valor != null) {
+        Provider.of<VentasProvider>(context, listen: false)
+            .agregarVenta(_categoriaController.text, valor);
 
-      ventas.add({
-        "categoria": _categoriaController.text,
-        "valor": double.parse(_valorController.text)
-      });
-
-      _categoriaController.clear();
-      _valorController.clear();
+        _categoriaController.clear();
+        _valorController.clear();
+      }
     }
   }
 
-  void calcular() {
-    final resumen = controller.procesarVentas(ventas);
-
-    Navigator.pushNamed(
+  void calcular(BuildContext context) {
+    Navigator.push(
       context,
-      '/resultado',
-      arguments: resumen,
+      MaterialPageRoute(builder: (context) => const ResultPage()),
     );
   }
 
   @override
   Widget build(BuildContext context) {
+    final ventasProvider = Provider.of<VentasProvider>(context);
+
     return Scaffold(
-      appBar: AppBar(title: const Text('Tienda Tiki Taka')),
+      appBar: AppBar(title: const Text('Registro de Ventas')),
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
           children: [
-
             TextField(
               controller: _categoriaController,
               decoration: const InputDecoration(
                 labelText: 'Categoría',
               ),
             ),
-
             TextField(
               controller: _valorController,
               keyboardType: TextInputType.number,
@@ -63,21 +59,16 @@ class _HomeViewState extends State<HomeView> {
                 labelText: 'Valor de la venta',
               ),
             ),
-
             const SizedBox(height: 10),
-
             ElevatedButton(
-              onPressed: agregarVenta,
+              onPressed: () => agregarVenta(context),
               child: const Text('Agregar venta'),
             ),
-
             const SizedBox(height: 10),
-            Text('Ventas registradas: ${ventas.length}'),
-
+            Text('Ventas registradas: ${ventasProvider.ventas.length}'),
             const SizedBox(height: 20),
-
             ElevatedButton(
-              onPressed: calcular,
+              onPressed: () => calcular(context),
               child: const Text('Procesar ventas'),
             ),
           ],

@@ -23,6 +23,13 @@ class VentasController {
       }
 
       resumen.totalGlobal += valor;
+      
+      String categoria = venta["categoria"];
+      if (resumen.totalesPorCategoria.containsKey(categoria)) {
+        resumen.totalesPorCategoria[categoria] = resumen.totalesPorCategoria[categoria]! + valor;
+      } else {
+        resumen.totalesPorCategoria[categoria] = valor;
+      }
     }
 
     return resumen;

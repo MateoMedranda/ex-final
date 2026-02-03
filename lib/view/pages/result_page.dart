@@ -25,6 +25,9 @@ class ResultPage extends StatelessWidget {
             const SizedBox(height: 10),
             Text('Ventas ≤ \$500: ${resumen.menores500}'),
             Text('Monto: \$${resumen.totalMenores500}'),
+            ...resumen.totalesPorCategoria.entries.map((entry) {
+              return Text('Total ${entry.key}: \$${entry.value}');
+            }),
             const Divider(height: 30),
             Text(
               'TOTAL GLOBAL: \$${resumen.totalGlobal}',

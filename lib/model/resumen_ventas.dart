@@ -8,4 +8,6 @@ class ResumenVentas {
   double totalMenores500 = 0;
 
   double totalGlobal = 0;
+
+  Map<String, double> totalesPorCategoria = {};
 }
